@@ -13,17 +13,24 @@ import {
   subMonths,
 } from "date-fns";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import Link from "next/link";
 import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import type { CuratedRecord } from "@/lib/types";
 
 interface ArchiveCalendarProps {
   archives: CuratedRecord[];
-  onSelectDate: (archive: CuratedRecord | null) => void;
-  selectedDate: Date | null;
+  onSelectDate?: (archive: CuratedRecord | null) => void;
+  selectedDate?: Date | null;
+  linkPrefix?: string;
 }
 
-export function ArchiveCalendar({ archives, onSelectDate, selectedDate }: ArchiveCalendarProps) {
+export function ArchiveCalendar({
+  archives,
+  onSelectDate,
+  selectedDate,
+  linkPrefix,
+}: ArchiveCalendarProps) {
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
   // Create a map of dates that have archives
@@ -89,26 +96,45 @@ export function ArchiveCalendar({ archives, onSelectDate, selectedDate }: Archiv
           const isSelected = selectedDate && isSameDay(day, selectedDate);
           const isToday = isSameDay(day, new Date());
 
+          const dayContent = (
+            <>
+              {format(day, "d")}
+              {hasArchive && !isSelected && (
+                <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary" />
+              )}
+            </>
+          );
+
+          const dayClasses = `
+            relative aspect-square flex items-center justify-center text-sm rounded-md transition-colors
+            ${!isCurrentMonth ? "text-muted-foreground/40" : ""}
+            ${isSelected ? "bg-primary text-primary-foreground" : ""}
+            ${!isSelected && hasArchive ? "hover:bg-accent cursor-pointer font-medium" : ""}
+            ${!isSelected && isToday ? "border border-primary" : ""}
+            ${!hasArchive ? "cursor-default" : ""}
+          `;
+
+          if (hasArchive && linkPrefix) {
+            return (
+              <Link
+                key={day.toISOString()}
+                href={`${linkPrefix}/${dateKey}`}
+                className={dayClasses}
+              >
+                {dayContent}
+              </Link>
+            );
+          }
+
           return (
             <button
               key={day.toISOString()}
               type="button"
-              onClick={() => hasArchive && onSelectDate(archive)}
+              onClick={() => hasArchive && onSelectDate?.(archive)}
               disabled={!hasArchive}
-              className={`
-                relative aspect-square flex items-center justify-center text-sm rounded-md transition-colors
-                ${!isCurrentMonth ? "text-muted-foreground/40" : ""}
-                ${isSelected ? "bg-primary text-primary-foreground" : ""}
-                ${!isSelected && hasArchive ? "hover:bg-accent cursor-pointer font-medium" : ""}
-                ${!isSelected && isToday ? "border border-primary" : ""}
-                ${!hasArchive ? "cursor-default" : ""}
-              `}
+              className={dayClasses}
             >
-              {format(day, "d")}
-              {/* Dot indicator for archives */}
-              {hasArchive && !isSelected && (
-                <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary" />
-              )}
+              {dayContent}
             </button>
           );
         })}

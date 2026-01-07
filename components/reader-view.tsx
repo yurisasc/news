@@ -2,6 +2,7 @@
 
 import { ArrowLeft, ExternalLink } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import type { NewsArticle } from "@/lib/types";
@@ -12,6 +13,7 @@ interface ReaderViewProps {
 }
 
 export function ReaderView({ article }: ReaderViewProps) {
+  const router = useRouter();
   const [metadata, setMetadata] = useState<{
     favicon?: string;
     pageTitle?: string;
@@ -29,11 +31,21 @@ export function ReaderView({ article }: ReaderViewProps) {
       <header className="border-b border-border sticky top-0 bg-background/95 backdrop-blur z-10">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
-            <Button variant="ghost" size="sm" asChild>
-              <a href="/archive" className="gap-2">
-                <ArrowLeft className="w-4 h-4" />
-                Back to Archive
-              </a>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="gap-2"
+              onClick={() => {
+                // Prefer browser history to preserve filters/search/pagination
+                if (typeof window !== "undefined" && window.history.length > 1) {
+                  window.history.back();
+                } else {
+                  router.push("/archive/news");
+                }
+              }}
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Back
             </Button>
 
             {article.fields.URL && (

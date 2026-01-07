@@ -2,7 +2,9 @@
 
 import { format } from "date-fns";
 import { CalendarIcon, ExternalLink, Search, X } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -20,19 +22,62 @@ import type { NewsArticle } from "@/lib/types";
 
 interface NewsSearchProps {
   initialData: NewsArticle[];
+  initialPage?: number;
 }
 
 type SearchField = "all" | "title" | "content" | "category";
 
 const ITEMS_PER_PAGE = 20;
 
-export function NewsSearch({ initialData }: NewsSearchProps) {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [searchField, setSearchField] = useState<SearchField>("all");
-  const [selectedCategory, setSelectedCategory] = useState<string>("all");
-  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
-  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
-  const [currentPage, setCurrentPage] = useState(1);
+export function NewsSearch({ initialData, initialPage = 1 }: NewsSearchProps) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  // Initialize state from URL params
+  const [searchQuery, setSearchQuery] = useState(searchParams.get("q") || "");
+  const fieldParam = searchParams.get("field");
+  const [searchField, setSearchField] = useState<SearchField>((fieldParam as SearchField) || "all");
+  const categoryParam = searchParams.get("category");
+  const [selectedCategory, setSelectedCategory] = useState<string>(categoryParam || "all");
+  const fromParam = searchParams.get("from");
+  const toParam = searchParams.get("to");
+  const [startDate, setStartDate] = useState<Date | undefined>(
+    fromParam ? new Date(fromParam) : undefined,
+  );
+  const [endDate, setEndDate] = useState<Date | undefined>(toParam ? new Date(toParam) : undefined);
+  const [currentPage, setCurrentPage] = useState(initialPage);
+
+  // Build query string from current filters
+  const buildQueryString = useCallback(() => {
+    const params = new URLSearchParams();
+    if (searchQuery) params.set("q", searchQuery);
+    if (searchField !== "all") params.set("field", searchField);
+    if (selectedCategory !== "all") params.set("category", selectedCategory);
+    if (startDate) params.set("from", format(startDate, "yyyy-MM-dd"));
+    if (endDate) params.set("to", format(endDate, "yyyy-MM-dd"));
+    return params.toString();
+  }, [searchQuery, searchField, selectedCategory, startDate, endDate]);
+
+  // Build URL for pagination links with current filters preserved
+  const buildPageUrl = useCallback(
+    (page: number) => {
+      const qs = buildQueryString();
+      const basePath = page === 1 ? "/archive/news" : `/archive/news/page/${page}`;
+      return qs ? `${basePath}?${qs}` : basePath;
+    },
+    [buildQueryString],
+  );
+
+  // Update URL when filters change (debounced for search input)
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      const qs = buildQueryString();
+      const newUrl = qs ? `${pathname}?${qs}` : pathname;
+      router.replace(newUrl, { scroll: false });
+    }, 300);
+    return () => clearTimeout(timeout);
+  }, [buildQueryString, pathname, router]);
 
   // Get unique categories
   const categories = useMemo(() => {
@@ -101,10 +146,10 @@ export function NewsSearch({ initialData }: NewsSearchProps) {
     return filteredNews.slice(start, start + ITEMS_PER_PAGE);
   }, [filteredNews, currentPage]);
 
-  // Reset to first page when filtered results change
+  // Sync currentPage with initialPage when navigating between pages
   useEffect(() => {
-    setCurrentPage(1);
-  }, []);
+    setCurrentPage(initialPage);
+  }, [initialPage]);
 
   const clearFilters = () => {
     setSearchQuery("");
@@ -112,6 +157,7 @@ export function NewsSearch({ initialData }: NewsSearchProps) {
     setSelectedCategory("all");
     setStartDate(undefined);
     setEndDate(undefined);
+    router.replace(pathname, { scroll: false });
   };
 
   const hasActiveFilters = searchQuery || selectedCategory !== "all" || startDate || endDate;
@@ -283,17 +329,15 @@ export function NewsSearch({ initialData }: NewsSearchProps) {
       {/* Pagination Controls */}
       {totalPages > 1 && (
         <div className="flex items-center justify-center gap-2 mt-8 py-4 border-t border-border">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              setCurrentPage((p) => Math.max(1, p - 1));
-              window.scrollTo({ top: 0, behavior: "smooth" });
-            }}
-            disabled={currentPage === 1}
-          >
-            Previous
-          </Button>
+          {currentPage > 1 ? (
+            <Button variant="outline" size="sm" asChild>
+              <Link href={buildPageUrl(currentPage - 1)}>Previous</Link>
+            </Button>
+          ) : (
+            <Button variant="outline" size="sm" disabled>
+              Previous
+            </Button>
+          )}
 
           <div className="flex items-center gap-1">
             {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
@@ -313,29 +357,24 @@ export function NewsSearch({ initialData }: NewsSearchProps) {
                   key={pageNum}
                   variant={currentPage === pageNum ? "default" : "outline"}
                   size="sm"
-                  onClick={() => {
-                    setCurrentPage(pageNum);
-                    window.scrollTo({ top: 0, behavior: "smooth" });
-                  }}
                   className="w-9 h-9 p-0"
+                  asChild
                 >
-                  {pageNum}
+                  <Link href={buildPageUrl(pageNum)}>{pageNum}</Link>
                 </Button>
               );
             })}
           </div>
 
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              setCurrentPage((p) => Math.min(totalPages, p + 1));
-              window.scrollTo({ top: 0, behavior: "smooth" });
-            }}
-            disabled={currentPage === totalPages}
-          >
-            Next
-          </Button>
+          {currentPage < totalPages ? (
+            <Button variant="outline" size="sm" asChild>
+              <Link href={buildPageUrl(currentPage + 1)}>Next</Link>
+            </Button>
+          ) : (
+            <Button variant="outline" size="sm" disabled>
+              Next
+            </Button>
+          )}
         </div>
       )}
     </div>

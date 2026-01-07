@@ -1,11 +1,5 @@
-import ArchivePageClient from "@/components/archive-page-client";
-import { fetchAllCuratedHomepages, fetchAllNewsArticles } from "@/lib/api";
+import { redirect } from "next/navigation";
 
-export default async function ArchivePage() {
-  const [curatedArchive, newsArchive] = await Promise.all([
-    fetchAllCuratedHomepages(),
-    fetchAllNewsArticles(),
-  ]);
-
-  return <ArchivePageClient curatedArchive={curatedArchive} newsArchive={newsArchive} />;
+export default function ArchivePage() {
+  redirect("/archive/homepage");
 }

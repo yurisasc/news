@@ -33,7 +33,7 @@ export default function ArchivePageClient({ curatedArchive, newsArchive }: Archi
               Obluda
             </a>
             <nav className="flex items-center gap-8">
-              <a href="/archive" className="text-sm tracking-wide uppercase text-primary">
+              <a href="/archive/homepage" className="text-sm tracking-wide uppercase text-primary">
                 Archive
               </a>
             </nav>

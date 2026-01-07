@@ -181,3 +181,21 @@ export async function fetchStaticContent() {
     articles,
   };
 }
+
+/**
+ * Build-time helper to fetch all archive data and fail fast on missing/invalid results.
+ * Used by static generation to avoid silent partial pages.
+ */
+export async function fetchArchiveData() {
+  const { curatedHomepages, articles } = await fetchStaticContent();
+
+  if (!curatedHomepages || curatedHomepages.length === 0) {
+    throw new Error("Archive build failed: no curated homepage archives returned.");
+  }
+
+  if (!articles || articles.length === 0) {
+    throw new Error("Archive build failed: no news articles returned.");
+  }
+
+  return { curatedHomepages, articles };
+}

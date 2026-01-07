@@ -2,6 +2,7 @@
 
 import { format } from "date-fns";
 import { ArrowLeft, Calendar } from "lucide-react";
+import Link from "next/link";
 import { AtAGlance } from "@/components/at-a-glance";
 import { CategorySection } from "@/components/category-section";
 import { HeroSection } from "@/components/hero-section";
@@ -10,24 +11,38 @@ import type { CuratedRecord } from "@/lib/types";
 
 interface ArchiveHomepageViewProps {
   archive: CuratedRecord;
-  onBack: () => void;
+  onBack?: () => void;
+  backHref?: string;
 }
 
-export function ArchiveHomepageView({ archive, onBack }: ArchiveHomepageViewProps) {
+export function ArchiveHomepageView({ archive, onBack, backHref }: ArchiveHomepageViewProps) {
   const date = new Date(archive.fields.Date);
   const data = archive.fields.Data;
 
   return (
     <div>
       <div className="mb-8 pb-6 border-b border-border">
-        <Button
-          variant="ghost"
-          onClick={onBack}
-          className="mb-4 -ml-2 text-muted-foreground hover:text-foreground"
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Back to Calendar
-        </Button>
+        {backHref ? (
+          <Button
+            asChild
+            variant="ghost"
+            className="mb-4 -ml-2 text-muted-foreground hover:text-foreground"
+          >
+            <Link href={backHref}>
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Archive
+            </Link>
+          </Button>
+        ) : onBack ? (
+          <Button
+            variant="ghost"
+            onClick={onBack}
+            className="mb-4 -ml-2 text-muted-foreground hover:text-foreground"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Calendar
+          </Button>
+        ) : null}
 
         <div className="flex items-center gap-3">
           <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-accent">

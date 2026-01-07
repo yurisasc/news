@@ -4,17 +4,12 @@
     {
       "parameters": {
         "rule": {
-          "interval": [
-            {}
-          ]
+          "interval": [{}]
         }
       },
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.3,
-      "position": [
-        -272,
-        32
-      ],
+      "position": [-272, 32],
       "id": "e09bfe03-a995-4e99-ac3f-b0fb46f29629",
       "name": "Schedule Trigger"
     },
@@ -25,10 +20,7 @@
       },
       "type": "n8n-nodes-base.splitOut",
       "typeVersion": 1,
-      "position": [
-        272,
-        32
-      ],
+      "position": [272, 32],
       "id": "43fbe1ab-e75b-4f7d-90fd-706a5dc53ac4",
       "name": "Split Out"
     },
@@ -40,10 +32,7 @@
       },
       "type": "n8n-nodes-base.removeDuplicates",
       "typeVersion": 2,
-      "position": [
-        96,
-        272
-      ],
+      "position": [96, 272],
       "id": "5b64128c-060f-4ab3-88a2-7992210ba37f",
       "name": "Remove Duplicates"
     },
@@ -53,10 +42,7 @@
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [
-        96,
-        32
-      ],
+      "position": [96, 32],
       "id": "64bfb5df-f6e6-4c34-8ea4-524f09f08934",
       "name": "Collect IDs"
     },
@@ -94,10 +80,7 @@
       },
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [
-        288,
-        272
-      ],
+      "position": [288, 272],
       "id": "3a256360-11bb-41a7-81f4-99e82b43309e",
       "name": "Select important fields",
       "notesInFlow": true
@@ -113,10 +96,7 @@
       },
       "type": "@n8n/n8n-nodes-langchain.chainLlm",
       "typeVersion": 1.7,
-      "position": [
-        -256,
-        512
-      ],
+      "position": [-256, 512],
       "id": "ec16d50b-f9d1-48c8-8b9a-2abf2a58a920",
       "name": "Classify"
     },
@@ -146,10 +126,7 @@
       },
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2.3,
-      "position": [
-        -96,
-        272
-      ],
+      "position": [-96, 272],
       "id": "347a844e-79e8-4362-af46-e76ea437f66d",
       "name": "Select only news"
     },
@@ -164,10 +141,7 @@
       },
       "type": "@n8n/n8n-nodes-langchain.chainLlm",
       "typeVersion": 1.7,
-      "position": [
-        512,
-        720
-      ],
+      "position": [512, 720],
       "id": "b28cd57d-137d-4eeb-8e14-f23b150f7c08",
       "name": "Summarise",
       "executeOnce": false
@@ -178,10 +152,7 @@
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [
-        880,
-        720
-      ],
+      "position": [880, 720],
       "id": "61b8bed1-8234-423a-9a30-d2a4d7365256",
       "name": "Aggregate"
     },
@@ -194,10 +165,7 @@
       },
       "type": "@n8n/n8n-nodes-langchain.chainLlm",
       "typeVersion": 1.7,
-      "position": [
-        1104,
-        720
-      ],
+      "position": [1104, 720],
       "id": "b1103c36-4a2e-4fd0-9417-999fe4ed4e92",
       "name": "Final stitch"
     },
@@ -208,10 +176,7 @@
       },
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
       "typeVersion": 1,
-      "position": [
-        -256,
-        656
-      ],
+      "position": [-256, 656],
       "id": "f5e52b02-08cc-4633-bf50-1d4981043f6f",
       "name": "Classifier Agent",
       "credentials": {
@@ -229,10 +194,7 @@
       },
       "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
       "typeVersion": 1.3,
-      "position": [
-        -128,
-        656
-      ],
+      "position": [-128, 656],
       "id": "ad5c0ca4-d1cd-44ad-bb41-2aa1b5c7d29e",
       "name": "Classifier Parser"
     },
@@ -243,10 +205,7 @@
       },
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
       "typeVersion": 1,
-      "position": [
-        512,
-        880
-      ],
+      "position": [512, 880],
       "id": "07e8452b-e6a5-4f61-a1aa-a8820309a458",
       "name": "Summariser Agent",
       "credentials": {
@@ -264,10 +223,7 @@
       },
       "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
       "typeVersion": 1.3,
-      "position": [
-        608,
-        880
-      ],
+      "position": [608, 880],
       "id": "5fdb710b-3b0d-45be-9ce2-0b75fb556d25",
       "name": "Summary Parser"
     },
@@ -278,10 +234,7 @@
       },
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
       "typeVersion": 1,
-      "position": [
-        -128,
-        784
-      ],
+      "position": [-128, 784],
       "id": "951544e4-18f2-4f83-8068-daea3c14cf5e",
       "name": "Classification Parser Agent",
       "credentials": {
@@ -298,10 +251,7 @@
       },
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
       "typeVersion": 1,
-      "position": [
-        608,
-        1008
-      ],
+      "position": [608, 1008],
       "id": "1912b1b1-9d79-405b-8735-836e1076c36f",
       "name": "Summary Parser Agent",
       "credentials": {
@@ -318,10 +268,7 @@
       },
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
       "typeVersion": 1,
-      "position": [
-        1104,
-        880
-      ],
+      "position": [1104, 880],
       "id": "efec9ace-0cee-4352-8267-8734f43b64e4",
       "name": "Final Stitch Agent",
       "credentials": {
@@ -339,10 +286,7 @@
       },
       "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
       "typeVersion": 1.3,
-      "position": [
-        1232,
-        880
-      ],
+      "position": [1232, 880],
       "id": "0b4a775b-88ad-4847-bea9-89b7e012c43e",
       "name": "Final Stitch Parser"
     },
@@ -353,10 +297,7 @@
       },
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
       "typeVersion": 1,
-      "position": [
-        1232,
-        1008
-      ],
+      "position": [1232, 1008],
       "id": "feb8d92e-cd61-4484-b69f-7f9af252cd1a",
       "name": "Final Stitch Parser Agent",
       "credentials": {
@@ -413,10 +354,7 @@
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
-      "position": [
-        -96,
-        32
-      ],
+      "position": [-96, 32],
       "id": "3ca0f55f-b790-48f8-99c3-c09b8fee69e0",
       "name": "Get Yesterday's Articles",
       "notesInFlow": true,
@@ -460,10 +398,7 @@
       },
       "type": "n8n-nodes-base.nocoDb",
       "typeVersion": 3,
-      "position": [
-        288,
-        512
-      ],
+      "position": [288, 512],
       "id": "52a28a65-8d3a-4618-8770-7dc599e27a7d",
       "name": "Store News",
       "credentials": {
@@ -490,10 +425,7 @@
       },
       "type": "n8n-nodes-base.nocoDb",
       "typeVersion": 3,
-      "position": [
-        1456,
-        720
-      ],
+      "position": [1456, 720],
       "id": "18409710-a06f-4f87-b472-cd279fe2f32f",
       "name": "Store Result",
       "credentials": {
@@ -509,10 +441,7 @@
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [
-        288,
-        720
-      ],
+      "position": [288, 720],
       "id": "da3aaaec-3532-4efd-97b3-7a3496e5ae99",
       "name": "Filter and Group Priority News"
     },
@@ -525,10 +454,7 @@
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
-      "position": [
-        -272,
-        272
-      ],
+      "position": [-272, 272],
       "id": "f9a02168-fbcc-4bd9-83cb-dd4262a02de4",
       "name": "Get Full Article",
       "credentials": {
@@ -545,10 +471,7 @@
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
-      "position": [
-        1664,
-        720
-      ],
+      "position": [1664, 720],
       "id": "71a51a1e-f73f-4865-85f3-6eb64688106d",
       "name": "Trigger Vercel Build"
     }
