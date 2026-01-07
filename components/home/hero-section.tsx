@@ -19,7 +19,7 @@ export const HeroSection = forwardRef<HTMLElement, HeroSectionProps>(({ data }, 
         {data.headline}
       </h1>
 
-      <p className="text-lg md:text-xl text-muted-foreground mb-8 leading-relaxed text-pretty max-w-4xl">
+      <p className="text-md md:text-lg text-muted-foreground mb-8 leading-relaxed text-pretty max-w-4xl">
         {data.summary}
       </p>
 
