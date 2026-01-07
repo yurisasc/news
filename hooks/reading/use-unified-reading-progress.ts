@@ -47,6 +47,8 @@ export function useUnifiedReadingProgress(
   const heroRef = useRef<HTMLElement | null>(null);
   const atAGlanceRef = useRef<HTMLElement | null>(null);
   const hasRestoredScrollRef = useRef(false);
+  const lastSyncedSectionsRef = useRef<string[]>([]);
+  const lastProgressUpdateRef = useRef<number>(0);
 
   // Restore scroll position from localStorage on mount
   useEffect(() => {
@@ -67,10 +69,19 @@ export function useUnifiedReadingProgress(
       ? (completionState.sectionsRead ?? [])
       : observedSectionsRead;
 
-  // Sync observed sections to completion state (debounced)
+  // Sync observed sections to completion state
   useEffect(() => {
     if (observedSectionsRead.length > 0) {
-      updateSectionsRead(observedSectionsRead);
+      // Only update if sections actually changed to prevent infinite loop
+      const lastSynced = lastSyncedSectionsRef.current;
+      const sectionsChanged =
+        observedSectionsRead.length !== lastSynced.length ||
+        observedSectionsRead.some((s) => !lastSynced.includes(s));
+
+      if (sectionsChanged) {
+        lastSyncedSectionsRef.current = observedSectionsRead;
+        updateSectionsRead(observedSectionsRead);
+      }
     }
   }, [observedSectionsRead, updateSectionsRead]);
 
@@ -80,11 +91,16 @@ export function useUnifiedReadingProgress(
     if (atAGlanceRef.current) registerSection("at-a-glance", atAGlanceRef.current);
   }, [registerSection]);
 
-  // Update progress with section info and check for completion
+  // Update progress only when it changes
   useEffect(() => {
-    updateProgress(progress.percentage);
+    if (progress.percentage !== lastProgressUpdateRef.current) {
+      lastProgressUpdateRef.current = progress.percentage;
+      updateProgress(progress.percentage);
+    }
+  }, [progress.percentage, updateProgress]);
 
-    // Trigger celebration only when all sections are actually read
+  // Check for completion and trigger celebration
+  useEffect(() => {
     const allSectionsRead = sectionsRead.length === totalSections;
 
     if (allSectionsRead && !showCelebration && !completionState.isComplete) {
@@ -92,12 +108,10 @@ export function useUnifiedReadingProgress(
       setShowCelebration(true);
     }
   }, [
-    progress.percentage,
     sectionsRead.length,
     totalSections,
     showCelebration,
     completionState.isComplete,
-    updateProgress,
     markComplete,
   ]);
 
