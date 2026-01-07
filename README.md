@@ -82,7 +82,3 @@ Detailed documentation for the backend architecture is available in the [`docs/`
     ```
 
 5.  Open [http://localhost:3000](http://localhost:3000) with your browser.
-
-## 📄 License
-
-This project is open source and available under the [MIT License](LICENSE).
