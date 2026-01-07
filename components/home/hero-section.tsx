@@ -15,7 +15,7 @@ export const HeroSection = forwardRef<HTMLElement, HeroSectionProps>(({ data }, 
         </div>
       </div>
 
-      <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold mb-6 leading-tight text-balance">
+      <h1 className="text-3xl md:text-4xl lg:text-5xl font-serif font-bold mb-6 leading-tight text-balance">
         {data.headline}
       </h1>
 
