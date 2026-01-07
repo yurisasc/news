@@ -16,8 +16,13 @@ export async function generateStaticParams() {
   return pageNumbers.map((page) => ({ page: String(page) }));
 }
 
-export async function generateMetadata({ params }: { params: NewsPageParams }): Promise<Metadata> {
-  const { page } = params;
+export async function generateMetadata({
+  params,
+}: {
+  params: NewsPageParams | Promise<NewsPageParams>;
+}): Promise<Metadata> {
+  const resolvedParams = await params;
+  const { page } = resolvedParams;
   return {
     title: `News Archive – Page ${page}`,
     description: `Browse news articles in the Obluda archive, page ${page}.`,

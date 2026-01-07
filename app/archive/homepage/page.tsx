@@ -11,19 +11,23 @@ export const metadata: Metadata = {
 export default async function HomepageArchivePage() {
   const { curatedHomepages } = await fetchArchiveData();
   const sorted = [...curatedHomepages].sort(
-    (a, b) => new Date(b.fields.Date).getTime() - new Date(a.fields.Date).getTime(),
+    (a, b) =>
+      new Date(b.fields.Date).getTime() - new Date(a.fields.Date).getTime(),
   );
 
   return (
-    <div className="grid gap-8 lg:grid-cols-[350px,1fr]">
-      <div>
+    <div className="flex flex-col md:flex-row gap-8 items-start">
+      <div className="shrink-0">
         <h2 className="text-lg font-semibold mb-4">Select a Date</h2>
-        <ArchiveCalendar archives={curatedHomepages} linkPrefix="/archive/homepage" />
+        <ArchiveCalendar
+          archives={curatedHomepages}
+          linkPrefix="/archive/homepage"
+        />
         <p className="text-sm text-muted-foreground mt-4">
           Click on a dotted date to view that day's curated homepage.
         </p>
       </div>
-      <div className="lg:border-l lg:border-border lg:pl-8">
+      <div className="flex-1 md:border-l md:border-border md:pl-8 min-w-0">
         <h2 className="text-lg font-semibold mb-4">Recent Archives</h2>
         <div className="space-y-4">
           {sorted.slice(0, 5).map((archive) => {

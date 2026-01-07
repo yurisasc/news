@@ -55,7 +55,7 @@ export function ArchiveCalendar({
   const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
   return (
-    <div className="bg-card border border-border rounded-lg p-4">
+    <div className="bg-card border border-border rounded-lg p-4 max-w-[320px] mx-auto">
       {/* Calendar header */}
       <div className="flex items-center justify-between mb-4">
         <Button
@@ -66,7 +66,9 @@ export function ArchiveCalendar({
         >
           <ChevronLeft className="h-4 w-4" />
         </Button>
-        <h3 className="text-lg font-semibold">{format(currentMonth, "MMMM yyyy")}</h3>
+        <h3 className="text-lg font-semibold">
+          {format(currentMonth, "MMMM yyyy")}
+        </h3>
         <Button
           variant="ghost"
           size="icon"
@@ -80,7 +82,10 @@ export function ArchiveCalendar({
       {/* Week day headers */}
       <div className="grid grid-cols-7 gap-1 mb-2">
         {weekDays.map((day) => (
-          <div key={day} className="text-center text-xs font-medium text-muted-foreground py-2">
+          <div
+            key={day}
+            className="text-center text-xs font-medium text-muted-foreground py-2"
+          >
             {day}
           </div>
         ))}
@@ -109,7 +114,11 @@ export function ArchiveCalendar({
             relative aspect-square flex items-center justify-center text-sm rounded-md transition-colors
             ${!isCurrentMonth ? "text-muted-foreground/40" : ""}
             ${isSelected ? "bg-primary text-primary-foreground" : ""}
-            ${!isSelected && hasArchive ? "hover:bg-accent cursor-pointer font-medium" : ""}
+            ${
+              !isSelected && hasArchive
+                ? "hover:bg-accent cursor-pointer font-medium"
+                : ""
+            }
             ${!isSelected && isToday ? "border border-primary" : ""}
             ${!hasArchive ? "cursor-default" : ""}
           `;

@@ -29,11 +29,17 @@ export default function ArchivePageClient({ curatedArchive, newsArchive }: Archi
       <header className="border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
-            <a href="/" className="text-3xl font-serif font-bold text-foreground">
+            <a
+              href="/"
+              className="text-3xl font-serif font-bold text-foreground"
+            >
               Obluda
             </a>
             <nav className="flex items-center gap-8">
-              <a href="/archive/homepage" className="text-sm tracking-wide uppercase text-primary">
+              <a
+                href="/archive/homepage"
+                className="text-sm tracking-wide uppercase text-primary"
+              >
                 Archive
               </a>
             </nav>
@@ -41,11 +47,14 @@ export default function ArchivePageClient({ curatedArchive, newsArchive }: Archi
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
         <div className="mb-8">
-          <h1 className="text-5xl font-serif font-bold mb-4 text-balance">Archive</h1>
+          <h1 className="text-5xl font-serif font-bold mb-4 text-balance">
+            Archive
+          </h1>
           <p className="text-lg text-muted-foreground">
-            Browse historical curated homepages and search our complete news database
+            Browse historical curated homepages and search our complete news
+            database
           </p>
         </div>
 
@@ -58,7 +67,9 @@ export default function ArchivePageClient({ curatedArchive, newsArchive }: Archi
           {loading && (
             <div className="flex items-center justify-center py-20">
               <Loader2 className="w-8 h-8 animate-spin text-primary" />
-              <span className="ml-3 text-muted-foreground">Loading archive...</span>
+              <span className="ml-3 text-muted-foreground">
+                Loading archive...
+              </span>
             </div>
           )}
 
@@ -74,18 +85,23 @@ export default function ArchivePageClient({ curatedArchive, newsArchive }: Archi
                   ) : (
                     <div className="grid gap-8 lg:grid-cols-[350px,1fr]">
                       <div>
-                        <h2 className="text-lg font-semibold mb-4">Select a Date</h2>
+                        <h2 className="text-lg font-semibold mb-4">
+                          Select a Date
+                        </h2>
                         <ArchiveCalendar
                           archives={curatedArchive}
                           onSelectDate={handleSelectDate}
                           selectedDate={null}
                         />
                         <p className="text-sm text-muted-foreground mt-4">
-                          Click on a dotted date to view that day's curated homepage.
+                          Click on a dotted date to view that day's curated
+                          homepage.
                         </p>
                       </div>
                       <div className="lg:border-l lg:border-border lg:pl-8">
-                        <h2 className="text-lg font-semibold mb-4">Recent Archives</h2>
+                        <h2 className="text-lg font-semibold mb-4">
+                          Recent Archives
+                        </h2>
                         <div className="space-y-4">
                           {curatedArchive.slice(0, 5).map((archive) => {
                             const date = new Date(archive.fields.Date);
@@ -115,7 +131,9 @@ export default function ArchivePageClient({ curatedArchive, newsArchive }: Archi
                     </div>
                   )
                 ) : (
-                  <p className="text-muted-foreground">No curated archives available.</p>
+                  <p className="text-muted-foreground">
+                    No curated archives available.
+                  </p>
                 )}
               </TabsContent>
 
@@ -123,7 +141,9 @@ export default function ArchivePageClient({ curatedArchive, newsArchive }: Archi
                 {hasNews ? (
                   <NewsSearch initialData={newsArchive} />
                 ) : (
-                  <p className="text-muted-foreground">No news records available.</p>
+                  <p className="text-muted-foreground">
+                    No news records available.
+                  </p>
                 )}
               </TabsContent>
             </>

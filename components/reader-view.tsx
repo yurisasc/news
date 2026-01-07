@@ -37,7 +37,10 @@ export function ReaderView({ article }: ReaderViewProps) {
               className="gap-2"
               onClick={() => {
                 // Prefer browser history to preserve filters/search/pagination
-                if (typeof window !== "undefined" && window.history.length > 1) {
+                if (
+                  typeof window !== "undefined" &&
+                  window.history.length > 1
+                ) {
                   window.history.back();
                 } else {
                   router.push("/archive/news");
@@ -65,7 +68,7 @@ export function ReaderView({ article }: ReaderViewProps) {
         </div>
       </header>
 
-      <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
         {article.fields.Category && (
           <div className="mb-6">
             <span className="inline-block px-3 py-1 bg-accent text-accent-foreground text-sm font-semibold tracking-wide uppercase rounded">
@@ -80,12 +83,15 @@ export function ReaderView({ article }: ReaderViewProps) {
 
         {article.fields["Created Date"] && (
           <time className="block text-base text-muted-foreground mb-8">
-            {new Date(article.fields["Created Date"]).toLocaleDateString("en-US", {
-              weekday: "long",
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            })}
+            {new Date(article.fields["Created Date"]).toLocaleDateString(
+              "en-US",
+              {
+                weekday: "long",
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              },
+            )}
           </time>
         )}
 

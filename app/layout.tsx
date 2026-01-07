@@ -17,7 +17,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Obluda | Today’s Scenery of the End",
+  title: "Obluda | Today's Scenery of the End",
   description:
     "The monster has no name, only a hunger for truth. It consumes the chaos of global affairs to deliver pure, nameless clarity. Read what remains.",
   icons: {
@@ -53,6 +53,11 @@ export const metadata: Metadata = {
       "The monster has no name, only a hunger for truth. It consumes the chaos of global affairs to deliver pure, nameless clarity. Read what remains.",
     images: [`${siteUrl}/og_image.png`],
   },
+};
+
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({

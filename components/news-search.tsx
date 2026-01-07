@@ -18,6 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useIsMobile } from "@/hooks/use-mobile";
 import type { NewsArticle } from "@/lib/types";
 
 interface NewsSearchProps {
@@ -33,6 +34,7 @@ export function NewsSearch({ initialData, initialPage = 1 }: NewsSearchProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const isMobile = useIsMobile();
 
   // Initialize state from URL params
   const [searchQuery, setSearchQuery] = useState(searchParams.get("q") || "");
@@ -163,11 +165,11 @@ export function NewsSearch({ initialData, initialPage = 1 }: NewsSearchProps) {
   const hasActiveFilters = searchQuery || selectedCategory !== "all" || startDate || endDate;
 
   return (
-    <div>
+    <div className="overflow-x-hidden">
       <div className="mb-8 space-y-4">
         {/* Search input with field selector */}
-        <div className="flex gap-2">
-          <div className="relative flex-1">
+        <div className="flex flex-wrap gap-2 mb-2">
+          <div className="relative w-full sm:flex-1 min-w-0">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
             <Input
               type="search"
@@ -180,7 +182,7 @@ export function NewsSearch({ initialData, initialPage = 1 }: NewsSearchProps) {
             />
           </div>
           <Select value={searchField} onValueChange={(v) => setSearchField(v as SearchField)}>
-            <SelectTrigger className="w-36 h-12">
+            <SelectTrigger className="w-full sm:w-36 h-12">
               <SelectValue placeholder="Search in..." />
             </SelectTrigger>
             <SelectContent>
@@ -195,7 +197,7 @@ export function NewsSearch({ initialData, initialPage = 1 }: NewsSearchProps) {
         {/* Category and Date filters */}
         <div className="flex flex-wrap gap-2 items-center">
           <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-            <SelectTrigger className="w-44">
+            <SelectTrigger className="w-full sm:w-44">
               <SelectValue placeholder="Category" />
             </SelectTrigger>
             <SelectContent>
@@ -213,7 +215,7 @@ export function NewsSearch({ initialData, initialPage = 1 }: NewsSearchProps) {
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
-                className="w-40 justify-start text-left font-normal bg-transparent"
+                className="w-full sm:w-40 justify-start text-left font-normal bg-transparent"
               >
                 <CalendarIcon className="mr-2 h-4 w-4" />
                 {startDate ? format(startDate, "MMM d, yyyy") : "From date"}
@@ -229,7 +231,7 @@ export function NewsSearch({ initialData, initialPage = 1 }: NewsSearchProps) {
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
-                className="w-40 justify-start text-left font-normal bg-transparent"
+                className="w-full sm:w-40 justify-start text-left font-normal bg-transparent"
               >
                 <CalendarIcon className="mr-2 h-4 w-4" />
                 {endDate ? format(endDate, "MMM d, yyyy") : "To date"}
@@ -262,8 +264,8 @@ export function NewsSearch({ initialData, initialPage = 1 }: NewsSearchProps) {
         {paginatedNews.map((article) => (
           <Card key={String(article.id)} className="p-6 hover:border-primary transition-colors">
             <div className="flex items-start justify-between gap-4">
-              <div className="flex-1">
-                <div className="flex items-center gap-2 mb-2">
+              <div className="flex-1 min-w-0">
+                <div className="flex flex-wrap items-center gap-2 mb-2">
                   {article.fields.Category && (
                     <Badge variant="secondary" className="text-xs">
                       {article.fields.Category}
@@ -276,7 +278,7 @@ export function NewsSearch({ initialData, initialPage = 1 }: NewsSearchProps) {
                   )}
                 </div>
 
-                <h3 className="text-xl font-serif font-bold mb-2 leading-tight">
+                <h3 className="text-xl font-serif font-bold mb-2 leading-tight wrap-break-word">
                   <a
                     href={`/reader/${article.id}`}
                     className="hover:text-primary transition-colors"
@@ -291,7 +293,7 @@ export function NewsSearch({ initialData, initialPage = 1 }: NewsSearchProps) {
                   </p>
                 )}
 
-                <div className="flex items-center gap-4">
+                <div className="flex flex-wrap items-center gap-4">
                   <a
                     href={`/reader/${article.id}`}
                     className="text-sm font-semibold text-primary hover:underline"
@@ -304,10 +306,10 @@ export function NewsSearch({ initialData, initialPage = 1 }: NewsSearchProps) {
                       href={article.fields.URL}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                      className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors max-w-xs truncate"
                     >
-                      <ExternalLink className="w-3 h-3" />
-                      <span>Source</span>
+                      <ExternalLink className="w-3 h-3 shrink-0" />
+                      <span className="truncate">Source</span>
                     </a>
                   )}
                 </div>
@@ -328,7 +330,7 @@ export function NewsSearch({ initialData, initialPage = 1 }: NewsSearchProps) {
 
       {/* Pagination Controls */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-center gap-2 mt-8 py-4 border-t border-border">
+        <div className="flex flex-wrap items-center justify-center gap-2 mt-8 py-4 border-t border-border">
           {currentPage > 1 ? (
             <Button variant="outline" size="sm" asChild>
               <Link href={buildPageUrl(currentPage - 1)}>Previous</Link>
@@ -340,14 +342,14 @@ export function NewsSearch({ initialData, initialPage = 1 }: NewsSearchProps) {
           )}
 
           <div className="flex items-center gap-1">
-            {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+            {Array.from({ length: Math.min(isMobile ? 4 : 5, totalPages) }, (_, i) => {
               let pageNum: number;
-              if (totalPages <= 5) {
+              if (totalPages <= (isMobile ? 4 : 5)) {
                 pageNum = i + 1;
               } else if (currentPage <= 3) {
                 pageNum = i + 1;
               } else if (currentPage >= totalPages - 2) {
-                pageNum = totalPages - 4 + i;
+                pageNum = totalPages - (isMobile ? 3 : 4) + i;
               } else {
                 pageNum = currentPage - 2 + i;
               }

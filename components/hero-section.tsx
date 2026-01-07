@@ -30,7 +30,9 @@ export function HeroSection({ data }: HeroSectionProps) {
           {data.takeaways.map((takeaway, index) => (
             <li key={index} className="flex gap-3">
               <span className="text-primary font-bold shrink-0">•</span>
-              <span className="text-foreground leading-relaxed">{takeaway}</span>
+              <span className="text-foreground leading-relaxed">
+                {takeaway}
+              </span>
             </li>
           ))}
         </ul>

@@ -15,7 +15,10 @@ export function HomePage({ curatedData }: HomePageProps) {
       <header className="border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
-            <a href="/" className="text-3xl font-serif font-bold text-foreground">
+            <a
+              href="/"
+              className="text-3xl font-serif font-bold text-foreground"
+            >
               Obluda
             </a>
             <nav className="flex items-center gap-8">
@@ -30,7 +33,7 @@ export function HomePage({ curatedData }: HomePageProps) {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 space-y-16">
         <HeroSection data={curatedData.hero_section} />
 
         <div>
