@@ -3,11 +3,11 @@
 import { format } from "date-fns";
 import { ArrowLeft, Calendar } from "lucide-react";
 import Link from "next/link";
-import { AtAGlance } from "@/components/at-a-glance";
-import { CategorySection } from "@/components/category-section";
-import { HeroSection } from "@/components/hero-section";
 import { Button } from "@/components/ui/button";
 import type { CuratedRecord } from "@/lib/types";
+import { AtAGlance } from "../home/at-a-glance";
+import { CategorySection } from "../home/category-section";
+import { HeroSection } from "../home/hero-section";
 
 interface ArchiveHomepageViewProps {
   archive: CuratedRecord;
@@ -66,7 +66,7 @@ export function ArchiveHomepageView({ archive, onBack, backHref }: ArchiveHomepa
       {/* Categorized Sections */}
       <div className="space-y-16 mt-16">
         {data.categorized_sections?.map((section, index) => (
-          <CategorySection key={index} section={section} />
+          <CategorySection key={index} section={section} order={index} />
         ))}
       </div>
     </div>

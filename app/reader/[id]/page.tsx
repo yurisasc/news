@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { ReaderPageClient } from "@/components/reader-page-client";
+import { ReaderPageClient } from "@/components/reader/reader-page-client";
 import { fetchAllNewsArticles, fetchNewsById } from "@/lib/api";
 
 type ReaderPageParams = { id: string };

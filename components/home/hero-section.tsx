@@ -1,13 +1,14 @@
-import { SourcesPopover } from "@/components/sources-popover";
+import { forwardRef } from "react";
 import type { HeroSection as HeroSectionType } from "@/lib/types";
+import { SourcesPopover } from "../shared/sources-popover";
 
 interface HeroSectionProps {
   data: HeroSectionType;
 }
 
-export function HeroSection({ data }: HeroSectionProps) {
+export const HeroSection = forwardRef<HTMLElement, HeroSectionProps>(({ data }, ref) => {
   return (
-    <article className="border-b border-border pb-6 mb-0">
+    <article ref={ref} id="hero" className="border-b border-border pb-6 mb-0">
       <div className="flex items-start gap-3 mb-6">
         <div className="px-3 py-1 bg-primary text-primary-foreground text-sm font-semibold tracking-wide uppercase rounded">
           Breaking
@@ -30,9 +31,7 @@ export function HeroSection({ data }: HeroSectionProps) {
           {data.takeaways.map((takeaway, index) => (
             <li key={index} className="flex gap-3">
               <span className="text-primary font-bold shrink-0">•</span>
-              <span className="text-foreground leading-relaxed">
-                {takeaway}
-              </span>
+              <span className="text-foreground leading-relaxed">{takeaway}</span>
             </li>
           ))}
         </ul>
@@ -46,4 +45,6 @@ export function HeroSection({ data }: HeroSectionProps) {
       </div>
     </article>
   );
-}
+});
+
+HeroSection.displayName = "HeroSection";

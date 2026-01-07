@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { NewsSearch } from "@/components/news-search";
+import { NewsSearch } from "@/components/shared/news-search";
 import { fetchArchiveData } from "@/lib/api";
 
 export const metadata: Metadata = {

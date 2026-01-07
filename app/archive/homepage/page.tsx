@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArchiveCalendar } from "@/components/archive-calendar";
+import { ArchiveCalendar } from "@/components/archive/archive-calendar";
 import { fetchArchiveData } from "@/lib/api";
 
 export const metadata: Metadata = {
@@ -11,18 +11,14 @@ export const metadata: Metadata = {
 export default async function HomepageArchivePage() {
   const { curatedHomepages } = await fetchArchiveData();
   const sorted = [...curatedHomepages].sort(
-    (a, b) =>
-      new Date(b.fields.Date).getTime() - new Date(a.fields.Date).getTime(),
+    (a, b) => new Date(b.fields.Date).getTime() - new Date(a.fields.Date).getTime(),
   );
 
   return (
     <div className="flex flex-col md:flex-row gap-8 items-start">
       <div className="shrink-0">
         <h2 className="text-lg font-semibold mb-4">Select a Date</h2>
-        <ArchiveCalendar
-          archives={curatedHomepages}
-          linkPrefix="/archive/homepage"
-        />
+        <ArchiveCalendar archives={curatedHomepages} linkPrefix="/archive/homepage" />
         <p className="text-sm text-muted-foreground mt-4">
           Click on a dotted date to view that day's curated homepage.
         </p>

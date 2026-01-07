@@ -1,7 +1,7 @@
 "use client";
 
-import { ReaderView } from "@/components/reader-view";
 import type { NewsArticle } from "@/lib/types";
+import { ReaderView } from "./reader-view";
 
 interface ReaderPageClientProps {
   id: string;

@@ -1,14 +1,15 @@
 import { ExternalLink } from "lucide-react";
-import { SourcesPopover } from "@/components/sources-popover";
+import { forwardRef } from "react";
 import type { AtAGlanceItem } from "@/lib/types";
+import { SourcesPopover } from "../shared/sources-popover";
 
 interface AtAGlanceProps {
   items: AtAGlanceItem[];
 }
 
-export function AtAGlance({ items }: AtAGlanceProps) {
+export const AtAGlance = forwardRef<HTMLElement, AtAGlanceProps>(({ items }, ref) => {
   return (
-    <section className="border-b border-border py-8">
+    <section ref={ref} id="at-a-glance" className="border-b border-border py-8">
       <h2 className="text-base font-semibold tracking-wide uppercase mb-6 text-muted-foreground">
         At a Glance
       </h2>
@@ -40,4 +41,6 @@ export function AtAGlance({ items }: AtAGlanceProps) {
       </div>
     </section>
   );
-}
+});
+
+AtAGlance.displayName = "AtAGlance";

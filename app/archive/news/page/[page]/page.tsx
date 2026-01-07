@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
-import { NewsSearch } from "@/components/news-search";
+import { NewsSearch } from "@/components/shared/news-search";
 import { fetchArchiveData } from "@/lib/api";
 import { generateNewsPageNumbers, NEWS_PAGE_SIZE } from "@/lib/archive";
 

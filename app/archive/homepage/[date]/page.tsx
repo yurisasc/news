@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { ArchiveHomepageView } from "@/components/archive-homepage-view";
+import { ArchiveHomepageView } from "@/components/archive/archive-homepage-view";
 import { fetchArchiveData } from "@/lib/api";
 
 type HomepageParams = { date: string };

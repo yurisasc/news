@@ -61,3 +61,39 @@ export interface CuratedHomepage {
   at_a_glance: AtAGlanceItem[];
   categorized_sections: CategorySection[];
 }
+
+// Reading progress tracking
+export interface ReadingProgress {
+  scrollPosition: number;
+  maxScrollPosition: number;
+  totalContentHeight: number;
+  percentage: number;
+  sectionsRead: string[];
+  currentSection: string | null;
+}
+
+// Section metadata for tracking
+export interface SectionInfo {
+  id: string;
+  title: string;
+  order: number;
+  offsetTop: number;
+  height: number;
+  isRead: boolean;
+}
+
+// Persisted completion state (localStorage)
+export interface CompletionState {
+  pageId: string;
+  date: string;
+  completedAt: string | null;
+  isComplete: boolean;
+  scrollPercentage: number;
+  sectionsRead: string[];
+  hasDismissedCelebration: boolean;
+}
+
+// Category ordering configuration
+export interface CategoryOrderConfig {
+  [categoryName: string]: number;
+}
