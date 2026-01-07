@@ -1,5 +1,13 @@
-import { HomePageClient } from "@/components/home-page-client";
+import { notFound } from "next/navigation";
+import { HomePage } from "@/components/home-page";
+import { fetchCuratedHomepage } from "@/lib/api";
 
-export default function HomePage() {
-  return <HomePageClient />;
+export default async function Page() {
+  const curated = await fetchCuratedHomepage();
+
+  if (!curated) {
+    notFound();
+  }
+
+  return <HomePage curatedData={curated} />;
 }

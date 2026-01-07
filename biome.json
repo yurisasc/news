@@ -1,7 +1,15 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.3.11/schema.json",
   "files": {
-    "includes": ["**", "!node_modules", "!**/node_modules", "!.next", "!**/.next", "!components/ui"]
+    "includes": [
+      "**",
+      "!node_modules",
+      "!**/node_modules",
+      "!.next",
+      "!**/.next",
+      "!out",
+      "!components/ui"
+    ]
   },
   "linter": {
     "enabled": true,

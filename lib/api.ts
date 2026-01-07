@@ -3,6 +3,7 @@ import type {
   CuratedHomepage,
   CuratedRecord,
   NewsArticle,
+  NocoDBRecord,
   NocoDBResponse,
 } from "@/lib/types";
 
@@ -10,6 +11,14 @@ const API_BASE = process.env.NOCODB_API_BASE;
 const NEWS_TABLE = process.env.NOCODB_NEWS_TABLE;
 const CURATED_TABLE = process.env.NOCODB_CURATED_TABLE;
 const API_TOKEN = process.env.NOCODB_API_TOKEN;
+
+function assertConfig() {
+  if (!API_BASE || !NEWS_TABLE || !CURATED_TABLE) {
+    throw new Error(
+      "Missing NocoDB configuration. Ensure NOCODB_API_BASE, NOCODB_NEWS_TABLE, and NOCODB_CURATED_TABLE are set at build time.",
+    );
+  }
+}
 
 // Add metadata to news article
 export function enrichNewsArticle(article: NewsArticle): NewsArticle {
@@ -36,25 +45,38 @@ function getHeaders(): HeadersInit {
   return headers;
 }
 
+async function fetchAllRecords<T>(url: string, headers: HeadersInit): Promise<NocoDBRecord<T>[]> {
+  let records: NocoDBRecord<T>[] = [];
+  let nextUrl: string | undefined = url;
+
+  while (nextUrl) {
+    const response = await fetch(nextUrl, { headers });
+    if (!response.ok) {
+      break;
+    }
+    const data: NocoDBResponse<T> = await response.json();
+    records = records.concat(data.records || []);
+    nextUrl = data.next || undefined;
+  }
+
+  return records;
+}
+
+let newsArticlesCache: NewsArticle[] | null = null;
+
 export async function fetchCuratedHomepage(): Promise<CuratedHomepage | null> {
   try {
+    assertConfig();
     const sortParam = JSON.stringify({ field: "Date", direction: "desc" });
     const response = await fetch(
-      `${API_BASE}/${CURATED_TABLE}/records?sort=${encodeURIComponent(
-        sortParam,
-      )}&pageSize=1`,
+      `${API_BASE}/${CURATED_TABLE}/records?sort=${encodeURIComponent(sortParam)}&pageSize=1`,
       {
         headers: getHeaders(),
-        next: { revalidate: 300 },
       },
     );
 
     if (!response.ok) {
-      console.error(
-        "Failed to fetch curated homepage:",
-        response.status,
-        response.statusText,
-      );
+      console.error("Failed to fetch curated homepage:", response.status, response.statusText);
       return null;
     }
 
@@ -73,23 +95,13 @@ export async function fetchCuratedHomepage(): Promise<CuratedHomepage | null> {
 
 export async function fetchAllCuratedHomepages(): Promise<CuratedRecord[]> {
   try {
+    assertConfig();
     const sortParam = JSON.stringify({ field: "Date", direction: "desc" });
-    const response = await fetch(
-      `${API_BASE}/${CURATED_TABLE}/records?sort=${encodeURIComponent(
-        sortParam,
-      )}`,
-      {
-        headers: getHeaders(),
-        next: { revalidate: 300 },
-      },
+    const records = await fetchAllRecords<CuratedRecord["fields"]>(
+      `${API_BASE}/${CURATED_TABLE}/records?sort=${encodeURIComponent(sortParam)}`,
+      getHeaders(),
     );
-
-    if (!response.ok) {
-      return [];
-    }
-
-    const data: NocoDBResponse<CuratedRecord["fields"]> = await response.json();
-    return data.records || [];
+    return records;
   } catch (error) {
     console.error("Error fetching curated archives:", error);
     return [];
@@ -98,17 +110,15 @@ export async function fetchAllCuratedHomepages(): Promise<CuratedRecord[]> {
 
 export async function fetchNewsArchive(limit = 100): Promise<NewsArticle[]> {
   try {
+    assertConfig();
     const sortParam = JSON.stringify({
       field: "Created Date",
       direction: "desc",
     });
     const response = await fetch(
-      `${API_BASE}/${NEWS_TABLE}/records?sort=${encodeURIComponent(
-        sortParam,
-      )}&pageSize=${limit}`,
+      `${API_BASE}/${NEWS_TABLE}/records?sort=${encodeURIComponent(sortParam)}&pageSize=${limit}`,
       {
         headers: getHeaders(),
-        next: { revalidate: 300 },
       },
     );
 
@@ -126,19 +136,48 @@ export async function fetchNewsArchive(limit = 100): Promise<NewsArticle[]> {
 
 export async function fetchNewsById(id: string): Promise<NewsArticle | null> {
   try {
-    const response = await fetch(`${API_BASE}/${NEWS_TABLE}/records/${id}`, {
-      headers: getHeaders(),
-      next: { revalidate: 300 },
-    });
-
-    if (!response.ok) {
-      return null;
+    // Prefer cached list to avoid per-record 404s during build/export
+    if (!newsArticlesCache) {
+      newsArticlesCache = await fetchAllNewsArticles();
     }
-
-    const record: NewsArticle = await response.json();
-    return enrichNewsArticle(record);
+    const match = newsArticlesCache.find((article) => String(article.id) === String(id));
+    return match ?? null;
   } catch (error) {
     console.error("Error fetching news by ID:", error);
     return null;
   }
+}
+
+export async function fetchAllNewsArticles(): Promise<NewsArticle[]> {
+  try {
+    if (newsArticlesCache) {
+      return newsArticlesCache;
+    }
+    assertConfig();
+    const sortParam = JSON.stringify({
+      field: "Created Date",
+      direction: "desc",
+    });
+    const records = await fetchAllRecords<NewsArticle["fields"]>(
+      `${API_BASE}/${NEWS_TABLE}/records?sort=${encodeURIComponent(sortParam)}&pageSize=100`,
+      getHeaders(),
+    );
+    newsArticlesCache = records.map(enrichNewsArticle);
+    return newsArticlesCache;
+  } catch (error) {
+    console.error("Error fetching all news articles:", error);
+    return [];
+  }
+}
+
+export async function fetchStaticContent() {
+  const [homepages, articles] = await Promise.all([
+    fetchAllCuratedHomepages(),
+    fetchAllNewsArticles(),
+  ]);
+
+  return {
+    curatedHomepages: homepages,
+    articles,
+  };
 }

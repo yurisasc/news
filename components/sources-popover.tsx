@@ -4,11 +4,7 @@ import { ChevronDown, ExternalLink, Loader2 } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 interface SourceInfo {
   url: string;
@@ -27,11 +23,7 @@ interface SourcesPopoverProps {
   triggerLabel?: string;
 }
 
-export function SourcesPopover({
-  sources,
-  maxVisible = 3,
-  triggerLabel,
-}: SourcesPopoverProps) {
+export function SourcesPopover({ sources, maxVisible = 3, triggerLabel }: SourcesPopoverProps) {
   const [sourceInfos, setSourceInfos] = useState<SourceInfo[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -63,23 +55,22 @@ export function SourcesPopover({
   }, [sources]);
 
   // Group sources by hostname
-  const groupedSources = sourceInfos.reduce((acc, source) => {
-    if (!acc[source.hostname]) {
-      acc[source.hostname] = [];
-    }
-    acc[source.hostname].push(source);
-    return acc;
-  }, {} as Record<string, SourceInfo[]>);
+  const groupedSources = sourceInfos.reduce(
+    (acc, source) => {
+      if (!acc[source.hostname]) {
+        acc[source.hostname] = [];
+      }
+      acc[source.hostname].push(source);
+      return acc;
+    },
+    {} as Record<string, SourceInfo[]>,
+  );
 
   const visibleSources = triggerLabel ? [] : sourceInfos.slice(0, maxVisible);
-  const hasMore = triggerLabel
-    ? sourceInfos.length > 0
-    : sourceInfos.length > maxVisible;
+  const hasMore = triggerLabel ? sourceInfos.length > 0 : sourceInfos.length > maxVisible;
   const buttonLabel =
     triggerLabel ??
-    (sourceInfos.length > maxVisible
-      ? `+${sourceInfos.length - maxVisible} more`
-      : "");
+    (sourceInfos.length > maxVisible ? `+${sourceInfos.length - maxVisible} more` : "");
 
   if (loading) {
     return <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />;
@@ -114,27 +105,18 @@ export function SourcesPopover({
       {hasMore && (
         <Popover>
           <PopoverTrigger asChild>
-            <Button
-              variant="outline"
-              size="sm"
-              className="h-6 px-2 text-xs gap-1 bg-transparent"
-            >
+            <Button variant="outline" size="sm" className="h-6 px-2 text-xs gap-1 bg-transparent">
               {buttonLabel}
               <ChevronDown className="w-3 h-3" />
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-80 p-0 mr-4" align="start">
             <div className="px-3 py-2 border-b border-border">
-              <h4 className="text-sm font-semibold">
-                All Sources ({sourceInfos.length})
-              </h4>
+              <h4 className="text-sm font-semibold">All Sources ({sourceInfos.length})</h4>
             </div>
             <div className="max-h-64 overflow-y-auto">
               {Object.entries(groupedSources).map(([hostname, sources]) => (
-                <div
-                  key={hostname}
-                  className="border-b border-border last:border-0"
-                >
+                <div key={hostname} className="border-b border-border last:border-0">
                   <div className="px-3 py-2 bg-muted/50">
                     <div className="flex items-center gap-2">
                       {sources[0].favicon && (
@@ -146,12 +128,9 @@ export function SourcesPopover({
                           height={16}
                         />
                       )}
-                      <span className="text-xs font-medium text-muted-foreground">
-                        {hostname}
-                      </span>
+                      <span className="text-xs font-medium text-muted-foreground">{hostname}</span>
                       <span className="text-xs text-muted-foreground/60">
-                        ({sources.length}{" "}
-                        {sources.length === 1 ? "article" : "articles"})
+                        ({sources.length} {sources.length === 1 ? "article" : "articles"})
                       </span>
                     </div>
                   </div>
@@ -193,16 +172,11 @@ export function SourcesPopover({
           </PopoverTrigger>
           <PopoverContent className="w-80 p-0 mr-4" align="start">
             <div className="px-3 py-2 border-b border-border">
-              <h4 className="text-sm font-semibold">
-                All Sources ({sourceInfos.length})
-              </h4>
+              <h4 className="text-sm font-semibold">All Sources ({sourceInfos.length})</h4>
             </div>
             <div className="max-h-64 overflow-y-auto">
               {Object.entries(groupedSources).map(([hostname, sources]) => (
-                <div
-                  key={hostname}
-                  className="border-b border-border last:border-0"
-                >
+                <div key={hostname} className="border-b border-border last:border-0">
                   <div className="px-3 py-2 bg-muted/50">
                     <div className="flex items-center gap-2">
                       {sources[0].favicon && (
@@ -214,12 +188,9 @@ export function SourcesPopover({
                           height={16}
                         />
                       )}
-                      <span className="text-xs font-medium text-muted-foreground">
-                        {hostname}
-                      </span>
+                      <span className="text-xs font-medium text-muted-foreground">{hostname}</span>
                       <span className="text-xs text-muted-foreground/60">
-                        ({sources.length}{" "}
-                        {sources.length === 1 ? "article" : "articles"})
+                        ({sources.length} {sources.length === 1 ? "article" : "articles"})
                       </span>
                     </div>
                   </div>

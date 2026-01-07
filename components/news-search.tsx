@@ -2,7 +2,7 @@
 
 import { format } from "date-fns";
 import { CalendarIcon, ExternalLink, Search, X } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -24,12 +24,15 @@ interface NewsSearchProps {
 
 type SearchField = "all" | "title" | "content" | "category";
 
+const ITEMS_PER_PAGE = 20;
+
 export function NewsSearch({ initialData }: NewsSearchProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchField, setSearchField] = useState<SearchField>("all");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [startDate, setStartDate] = useState<Date | undefined>(undefined);
   const [endDate, setEndDate] = useState<Date | undefined>(undefined);
+  const [currentPage, setCurrentPage] = useState(1);
 
   // Get unique categories
   const categories = useMemo(() => {
@@ -91,6 +94,17 @@ export function NewsSearch({ initialData }: NewsSearchProps) {
 
     return results;
   }, [searchQuery, searchField, selectedCategory, startDate, endDate, initialData]);
+
+  const totalPages = Math.ceil(filteredNews.length / ITEMS_PER_PAGE);
+  const paginatedNews = useMemo(() => {
+    const start = (currentPage - 1) * ITEMS_PER_PAGE;
+    return filteredNews.slice(start, start + ITEMS_PER_PAGE);
+  }, [filteredNews, currentPage]);
+
+  // Reset to first page when filtered results change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, []);
 
   const clearFilters = () => {
     setSearchQuery("");
@@ -198,8 +212,8 @@ export function NewsSearch({ initialData }: NewsSearchProps) {
         </p>
       </div>
 
-      <div className="space-y-4">
-        {filteredNews.map((article) => (
+      <div className="space-y-4 mb-8">
+        {paginatedNews.map((article) => (
           <Card key={String(article.id)} className="p-6 hover:border-primary transition-colors">
             <div className="flex items-start justify-between gap-4">
               <div className="flex-1">
@@ -256,7 +270,7 @@ export function NewsSearch({ initialData }: NewsSearchProps) {
           </Card>
         ))}
 
-        {filteredNews.length === 0 && (
+        {paginatedNews.length === 0 && (
           <div className="text-center py-12">
             <p className="text-muted-foreground">No articles found matching your filters.</p>
             <Button variant="link" onClick={clearFilters} className="mt-2">
@@ -265,6 +279,65 @@ export function NewsSearch({ initialData }: NewsSearchProps) {
           </div>
         )}
       </div>
+
+      {/* Pagination Controls */}
+      {totalPages > 1 && (
+        <div className="flex items-center justify-center gap-2 mt-8 py-4 border-t border-border">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              setCurrentPage((p) => Math.max(1, p - 1));
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+            disabled={currentPage === 1}
+          >
+            Previous
+          </Button>
+
+          <div className="flex items-center gap-1">
+            {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+              let pageNum: number;
+              if (totalPages <= 5) {
+                pageNum = i + 1;
+              } else if (currentPage <= 3) {
+                pageNum = i + 1;
+              } else if (currentPage >= totalPages - 2) {
+                pageNum = totalPages - 4 + i;
+              } else {
+                pageNum = currentPage - 2 + i;
+              }
+
+              return (
+                <Button
+                  key={pageNum}
+                  variant={currentPage === pageNum ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => {
+                    setCurrentPage(pageNum);
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }}
+                  className="w-9 h-9 p-0"
+                >
+                  {pageNum}
+                </Button>
+              );
+            })}
+          </div>
+
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              setCurrentPage((p) => Math.min(totalPages, p + 1));
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+            disabled={currentPage === totalPages}
+          >
+            Next
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

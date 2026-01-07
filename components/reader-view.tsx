@@ -68,15 +68,12 @@ export function ReaderView({ article }: ReaderViewProps) {
 
         {article.fields["Created Date"] && (
           <time className="block text-base text-muted-foreground mb-8">
-            {new Date(article.fields["Created Date"]).toLocaleDateString(
-              "en-US",
-              {
-                weekday: "long",
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              },
-            )}
+            {new Date(article.fields["Created Date"]).toLocaleDateString("en-US", {
+              weekday: "long",
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
           </time>
         )}
 

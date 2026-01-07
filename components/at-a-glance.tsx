@@ -1,6 +1,6 @@
 import { ExternalLink } from "lucide-react";
-import type { AtAGlanceItem } from "@/lib/types";
 import { SourcesPopover } from "@/components/sources-popover";
+import type { AtAGlanceItem } from "@/lib/types";
 
 interface AtAGlanceProps {
   items: AtAGlanceItem[];
@@ -19,9 +19,7 @@ export function AtAGlance({ items }: AtAGlanceProps) {
               {String(index + 1).padStart(2, "0")}
             </span>
             <div className="space-y-1">
-              <p className="text-base leading-relaxed text-foreground">
-                {item.update}
-              </p>
+              <p className="text-base leading-relaxed text-foreground">{item.update}</p>
               {item.sources?.length ? (
                 <SourcesPopover
                   sources={item.sources}

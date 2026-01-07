@@ -28,9 +28,7 @@ export function CategorySection({ section }: CategorySectionProps) {
                 {story.takeaways.map((takeaway, idx) => (
                   <li key={idx} className="flex gap-3 text-base">
                     <span className="text-primary shrink-0">→</span>
-                    <span className="text-muted-foreground leading-relaxed">
-                      {takeaway}
-                    </span>
+                    <span className="text-muted-foreground leading-relaxed">{takeaway}</span>
                   </li>
                 ))}
               </ul>
