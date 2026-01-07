@@ -1,7 +1,9 @@
 "use client";
 
+import { formatInTimeZone } from "date-fns-tz";
 import { useUnifiedReadingProgress } from "@/hooks/reading/use-unified-reading-progress";
 import { sortCategories } from "@/lib/category-order";
+import { TIMEZONE } from "@/lib/date-utils";
 import type { CuratedHomepage } from "@/lib/types";
 import { CompletionCelebration } from "../reading/completion-celebration";
 import { ReadingProgress } from "../reading/reading-progress";
@@ -28,6 +30,12 @@ export function HomePage({ curatedData }: HomePageProps) {
       }
     }
   };
+
+  const formattedDate = formatInTimeZone(
+    new Date(curatedData.date),
+    TIMEZONE,
+    "EEEE, MMMM d, yyyy",
+  );
 
   return (
     <div className="min-h-screen bg-background">
@@ -69,6 +77,14 @@ export function HomePage({ curatedData }: HomePageProps) {
             </p>
           </div>
         )}
+
+        <div className="mb-8">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-accent rounded-full text-sm font-medium text-accent-foreground">
+            <span>Daily Digest</span>
+            <span className="text-accent-foreground/60">·</span>
+            <span>{formattedDate}</span>
+          </div>
+        </div>
 
         <div className="flex gap-8">
           <div className="flex-1 min-w-0">

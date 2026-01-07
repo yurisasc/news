@@ -57,6 +57,7 @@ export interface AtAGlanceItem {
 }
 
 export interface CuratedHomepage {
+  date: string;
   hero_section: HeroSection;
   at_a_glance: AtAGlanceItem[];
   categorized_sections: CategorySection[];

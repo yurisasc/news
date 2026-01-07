@@ -53,9 +53,13 @@ export function useUnifiedReadingProgress(
   // Restore scroll position from localStorage on mount
   useEffect(() => {
     if (isLoaded && !hasRestoredScrollRef.current && completionState.scrollPercentage > 0) {
+      // If scroll percentage is less than 5%, treat as 0% (top of page)
+      const percentageToRestore =
+        completionState.scrollPercentage < 5 ? 0 : completionState.scrollPercentage;
+
       // Calculate scroll position based on percentage
       const totalScrollHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const targetScrollPosition = (completionState.scrollPercentage / 100) * totalScrollHeight;
+      const targetScrollPosition = (percentageToRestore / 100) * totalScrollHeight;
 
       // Scroll to the saved position
       window.scrollTo(0, targetScrollPosition);

@@ -83,7 +83,14 @@ export async function fetchCuratedHomepage(): Promise<CuratedHomepage | null> {
     const data: NocoDBResponse<CuratedRecord["fields"]> = await response.json();
 
     if (data.records && data.records.length > 0) {
-      return data.records[0].fields.Data;
+      const record = data.records[0];
+      const { Data } = record.fields;
+      return {
+        date: record.fields.Date,
+        hero_section: Data.hero_section,
+        at_a_glance: Data.at_a_glance,
+        categorized_sections: Data.categorized_sections,
+      };
     }
 
     return null;

@@ -12,10 +12,12 @@ import {
   startOfWeek,
   subMonths,
 } from "date-fns";
+import { toZonedTime } from "date-fns-tz";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { TIMEZONE } from "@/lib/date-utils";
 import type { CuratedRecord } from "@/lib/types";
 
 interface ArchiveCalendarProps {
@@ -32,6 +34,9 @@ export function ArchiveCalendar({
   linkPrefix,
 }: ArchiveCalendarProps) {
   const [currentMonth, setCurrentMonth] = useState(new Date());
+
+  // Get today's date in AEST
+  const todayInAEST = useMemo(() => toZonedTime(new Date(), TIMEZONE), []);
 
   // Create a map of dates that have archives
   const archiveDates = useMemo(() => {
@@ -94,7 +99,6 @@ export function ArchiveCalendar({
           const archive = archiveDates.get(dateKey) || null;
           const isCurrentMonth = isSameMonth(day, currentMonth);
           const isSelected = selectedDate && isSameDay(day, selectedDate);
-          const isToday = isSameDay(day, new Date());
 
           const dayContent = (
             <>
@@ -110,7 +114,7 @@ export function ArchiveCalendar({
             ${!isCurrentMonth ? "text-muted-foreground/40" : ""}
             ${isSelected ? "bg-primary text-primary-foreground" : ""}
             ${!isSelected && hasArchive ? "hover:bg-accent cursor-pointer font-medium" : ""}
-            ${!isSelected && isToday ? "border border-primary" : ""}
+            ${!isSelected && isSameDay(day, todayInAEST) ? "border border-primary" : ""}
             ${!hasArchive ? "cursor-default" : ""}
           `;
 
