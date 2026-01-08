@@ -1,10 +1,12 @@
 "use client";
 
+import { formatInTimeZone } from "date-fns-tz";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { TIMEZONE } from "@/lib/date-utils";
 import type { CompletionState } from "@/lib/types";
 
 function getTodayDate(): string {
-  return new Date().toISOString().split("T")[0];
+  return formatInTimeZone(new Date(), TIMEZONE, "yyyy-MM-dd");
 }
 
 function getStorageKey(pageId: string): string {
